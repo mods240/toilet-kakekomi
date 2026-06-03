@@ -351,23 +351,9 @@ export default function Home() {
           <h1 className="text-xl font-bold">🚻 トイレの駆け込み寺</h1>
           <p className="text-xs text-red-300">タップでエリア変更</p>
         </button>
-        <div className="flex items-center gap-3">
-          {hasLocation && view === "map" && (
-            <button
-              onClick={() => {
-                const map = (window as any)._toiletMap;
-                if (map && currentPosRef.current) {
-                  map.setView(currentPosRef.current, 16);
-                }
-              }}
-              style={{ background:'rgba(255,255,255,0.2)', border:'none', borderRadius:8, padding:'4px 8px', color:'white', fontSize:18, cursor:'pointer' }}
-              title="現在地に戻る"
-            >📍</button>
-          )}
-          <p className="text-xs text-red-200">
-            {loading ? "読込中..." : `${toilets.length}件`}
-          </p>
-        </div>
+        <p className="text-xs text-red-200">
+          {loading ? "読込中..." : `${toilets.length}件`}
+        </p>
       </header>
 
       <div className="flex bg-white border-b border-red-100">
@@ -388,8 +374,20 @@ export default function Home() {
             <p className="text-red-800">🚻 読み込み中...</p>
           </div>
         ) : view === "map" ? (
-          <div className="h-full">
+          <div className="h-full relative">
             <Map toilets={toilets} center={center} bookmarks={bookmarks} onToggleBookmark={toggleBookmark} />
+            {hasLocation && (
+              <button
+                onClick={() => {
+                  const map = (window as any)._toiletMap;
+                  if (map && currentPosRef.current) {
+                    map.setView(currentPosRef.current, 16);
+                  }
+                }}
+                style={{ position:'absolute', bottom:32, right:12, zIndex:1000, width:44, height:44, borderRadius:'50%', background:'#dc2626', border:'3px solid white', color:'white', fontSize:20, display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', boxShadow:'0 2px 8px rgba(0,0,0,0.3)' }}
+                title="現在地に戻る"
+              >📍</button>
+            )}
           </div>
         ) : view === "bookmarks" ? (
           <div className="h-full overflow-y-auto">
